@@ -17,7 +17,7 @@ podTemplate(label: 'nginx_build_pod', containers: [
             stage('Git checkout') {
                 env.BUILD_VERSION = scm.getBranches()[0].toString()
                 git branch: env.BUILD_VERSION,
-                    url: 'https://github.com/Scandr/nginx_cicd_source.git',
+                    url: 'https://github.com/Scandr/nginx_cicd_source.git'
 //                     credentialsId: 'git_creds'
             }
         }
