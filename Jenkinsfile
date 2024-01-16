@@ -4,13 +4,15 @@ podTemplate(label: 'nginx_build_pod', containers: [
 ]){
     properties([
         pipelineTriggers([
-            github(
-            triggerOnPush: true,
-            triggerOnMergeRequest: true,
-            triggerOpenMergeRequestOnPush: "source",
-            branchFilterType: "All",
-            triggerOnNoteRequest: false)
+//             github(
+//             triggerOnPush: true,
+//             triggerOnMergeRequest: true,
+//             triggerOpenMergeRequestOnPush: "source",
+//             branchFilterType: "All",
+//             triggerOnNoteRequest: false)
+            pollSCM('5 * * * *') // every 5 min
         ])
+
     ])
     node('nginx_build_pod') {
         container('git') {
@@ -23,7 +25,7 @@ podTemplate(label: 'nginx_build_pod', containers: [
         }
         container('kaniko') {
             stage('Build nginx image') {
-                withCredentials([usernameColonPassword(credentialsID: "", variable: 'USERPASS')]){
+                withCredentials([usernameColonPassword(credentialsID: "docker-cred", variable: 'USERPASS')]){
                     sh ' printf "{\\"auths\\": {\\"docker.io\\": {\\"auth\\": \\"%s\\"}}}\\n" $(echo -n $USERPASS | base64) > /kaniko/.docker/config.json '
                     sh 'ls -la /kaniko/.docker'
                     sh 'ls -la '
