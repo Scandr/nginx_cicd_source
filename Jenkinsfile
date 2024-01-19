@@ -23,9 +23,11 @@
                     env.BUILD_VERSION = scm.getBranches()[0].toString()
                     sh 'env'
                     //env.BUILD_VERSION = "main"
-                    git branch: env.BUILD_VERSION,
-                        url: 'https://github.com/Scandr/nginx_cicd_source.git'
-    //                     credentialsId: 'git_creds'
+                    //git branch: env.BUILD_VERSION,
+                    //    url: 'https://github.com/Scandr/nginx_cicd_source.git'
+                    //     credentialsId: 'git_creds'
+                    checkout scmGit(branches: [[name: "${env.BUILD_VERSION}"]],
+                        userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]])
                 }
             }
             container('kaniko') {
