@@ -20,8 +20,8 @@
             // container('jnlp') {
             container('git') {
                 stage('Git checkout') {
-    //                 env.BUILD_VERSION = scm.getBranches()[0].toString()
-                    env.BUILD_VERSION = "main"
+                    env.BUILD_VERSION = scm.getBranches()[0].toString()
+                    //env.BUILD_VERSION = "main"
                     git branch: env.BUILD_VERSION,
                         url: 'https://github.com/Scandr/nginx_cicd_source.git'
     //                     credentialsId: 'git_creds'
