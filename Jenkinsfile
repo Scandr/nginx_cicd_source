@@ -30,9 +30,13 @@
                     //git branch: env.BUILD_VERSION,
                     //    url: 'https://github.com/Scandr/nginx_cicd_source.git'
                     //     credentialsId: 'git_creds'
-                    checkout scmGit(branches: [[name: "${env.BUILD_VERSION}"]],
-                        userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]])
-                    env.GIT_TAG_NAME = sh(script: '''git describe --tags | awk -F"-" '/-/{print $1}' ''', returnStdout: true).trim()
+                    checkout scmGit(
+                        branches: [[name: "${env.BUILD_VERSION}"]],
+                        //extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'nginx_source']],
+                        userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]]
+                        )
+                    //env.GIT_TAG_NAME = sh(script: '''git describe --tags | awk -F"-" '/-/{print $1}' ''', returnStdout: true).trim()
+                    env.GIT_TAG_NAME = sh(script: '''git describe --tags | grep -e "latest-*" ''', returnStdout: true).trim()
                     sh 'env'
                 }
             }
