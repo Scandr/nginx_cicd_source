@@ -28,11 +28,12 @@
                     //     credentialsId: 'git_creds'
                     checkout scmGit(branches: [[name: "${env.BUILD_VERSION}"]],
                         userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]])
+                    env.GIT_TAG_NAME = gitTagName()
                 }
             }
             container('kaniko') {
                 stage('Build nginx image') {
-//                     withCredentials([usernamePassword(credentialsID: 'docker-cred', variable: 'USERPASS')]){
+                    //withCredentials([usernamePassword(credentialsID: 'docker-cred', variable: 'USERPASS')]){
                     withCredentials([string(credentialsId:'docker-token', variable: 'DOCKER_TOKEN')]) {
                         sh '''
                         export DOCKER_CONFIG=/kaniko/.docker
@@ -50,11 +51,22 @@
                             /kaniko/executor version
                             '''
                         }
-//                         withCredentials([usernamePassword(credentialsID: "", usernameVariable: 'LOGIN', passwordVariable: 'PASS')]){
+                        //withCredentials([usernamePassword(credentialsID: "", usernameVariable: 'LOGIN', passwordVariable: 'PASS')]){
                             sh """#!/busybox/sh
                                 /kaniko/executor --verbosity debug --dockerfile ${env.WORKSPACE}/Dockerfile --destination "docker.io/xillah/nginx:${env.BUILD_VERSION}" --context dir://${env.WORKSPACE} --registry-mirror "docker.io" --cleanup --ignore-path=/busybox
                             """
-//                         }
+                        //}
+                    }
+                }
+            }
+            if (env.GIT_TAG_NAME){
+                container('git') {
+                    withCredentials([usernamePassword(credentialsID: "ubuntu", usernameVariable: 'LOGIN', passwordVariable: 'PASS')]){
+                    sh '''
+                        echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
+                        sed -i '/        image: xillah/nginx/c\        image: xillah/nginx:${GIT_TAG_NAME}' ${WORKSPACE}/kuber_manifests/deployment.yml
+                        cat ${WORKSPACE}/kuber_manifests/deployment.yml
+                    '''
                     }
                 }
             }

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-page.html
+  namespace: nginx
+data:
+  custom-page.html: |
+    {{ .Values. }}
