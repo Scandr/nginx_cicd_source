@@ -61,11 +61,12 @@
             }
             if (env.GIT_TAG_NAME){
                 container('git') {
-                    withCredentials([usernamePassword(credentialsID: "ubuntu", usernameVariable: 'LOGIN', passwordVariable: 'PASS')]){
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]){
                     sh '''
                         echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
                         sed -i '/        image: xillah/nginx/c\        image: xillah/nginx:${GIT_TAG_NAME}' ${WORKSPACE}/kuber_manifests/deployment.yml
                         cat ${WORKSPACE}/kuber_manifests/deployment.yml
+                        kubectl apply -f ${WORKSPACE}/kuber_manifests/deployment.yml
                     '''
                     }
                 }
