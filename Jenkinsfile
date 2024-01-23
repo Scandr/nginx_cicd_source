@@ -22,6 +22,9 @@
                 stage('Git checkout') {
                     env.BUILD_VERSION = scm.getBranches()[0].toString()
                     sh 'env'
+                    sh '''
+                    git config --global --add safe.directory $WORKSPACE
+                    '''
                     //env.BUILD_VERSION = "main"
                     //git branch: env.BUILD_VERSION,
                     //    url: 'https://github.com/Scandr/nginx_cicd_source.git'
