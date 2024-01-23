@@ -36,7 +36,7 @@
                         userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]]
                         )
                     //env.GIT_TAG_NAME = sh(script: '''git describe --tags | awk -F"-" '/-/{print $1}' ''', returnStdout: true).trim()
-                    env.GIT_TAG_NAME = sh(script: '''git describe --tags | grep -e "latest-*" ''', returnStdout: true).trim()
+                    env.GIT_TAG_NAME = sh(script: '''git describe --tags 2>/dev/null''', returnStdout: true).trim()
                     sh 'env'
                 }
             }
