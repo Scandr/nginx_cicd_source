@@ -78,8 +78,8 @@
                             echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
                             #sed -i "/\\        image:/c \\        image: 'xillah/nginx:${GIT_TAG_NAME}'" ${WORKSPACE}/kuber_manifests/deployment.yml
                             #cat ${WORKSPACE}/kuber_manifests/deployment.yml
-                            cp \${kube-client-cert} ${WORKSPACE}/kube-client-cert.pem
-                            cp \${kube-client-key} ${WORKSPACE}/kube-key-cert.pem
+                            cp \$kube-client-cert ${WORKSPACE}/kube-client-cert.pem
+                            cp \$kube-client-key ${WORKSPACE}/kube-key-cert.pem
                             curl --cert ${WORKSPACE}/kube-client-cert.pem --key ${WORKSPACE}/kube-key-cert.pem -k $KUBE_SERVER/apis/apps/v1/namespaces/nginx/deployments/nginx-deployment -X PATCH -H 'Content-Type: application/strategic-merge-patch+json' -d '{"spec": {"template": {"spec": {"containers": [{"name": "nginx","image": "xillah/nginx:$GIT_TAG_NAME"}]}}}}'
                         '''
                         }
