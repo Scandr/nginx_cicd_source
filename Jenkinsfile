@@ -65,13 +65,15 @@
             }
             if (env.GIT_TAG_NAME){
                 container('kubectl') {
-                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]){
-                    sh '''
-                        echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
-                        sed -i "/\\        image:/c \\        image: 'xillah/nginx:${GIT_TAG_NAME}'" ${WORKSPACE}/kuber_manifests/deployment.yml
-                        cat ${WORKSPACE}/kuber_manifests/deployment.yml
-                        kubectl apply -f ${WORKSPACE}/kuber_manifests/deployment.yml
-                    '''
+                    stage('Update image'){
+                        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]){
+                        sh '''
+                            echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
+                            sed -i "/\\        image:/c \\        image: 'xillah/nginx:${GIT_TAG_NAME}'" ${WORKSPACE}/kuber_manifests/deployment.yml
+                            cat ${WORKSPACE}/kuber_manifests/deployment.yml
+                            kubectl apply -f ${WORKSPACE}/kuber_manifests/deployment.yml
+                        '''
+                        }
                     }
                 }
             }
