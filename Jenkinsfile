@@ -2,7 +2,8 @@
         containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:v1.19.2-debug', ttyEnabled: true, command: 'sleep', args: '99d'),
         // containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:latest-jdk17', command: 'sleep', args: '99d', ttyEnabled: true)
         // containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent', args: '${computer.jnlpmac} ${computer.name}')
-        containerTemplate(name: 'git', image: 'bitnami/git', command: 'sleep', args: '99d')
+        containerTemplate(name: 'git', image: 'bitnami/git', command: 'sleep', args: '99d'),
+        containerTemplate(name: 'kubectl', image: 'bitnami/kubectl:1.28.6', command: 'sleep', args: '99d')
     ]){
         properties([
             pipelineTriggers([
@@ -31,7 +32,7 @@
                     //     credentialsId: 'git_creds'
                     checkout scmGit(branches: [[name: "${env.BUILD_VERSION}"]],
                         userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]])
-                    env.GIT_TAG_NAME = sh(script: 'git describe --tags', returnStdout: true).trim()
+                    env.GIT_TAG_NAME = sh(script: '''git describe --tags | awk -F"-" '/-/{print $1}' ''', returnStdout: true).trim()
                 }
             }
             container('kaniko') {
@@ -63,7 +64,7 @@
                 }
             }
             if (env.GIT_TAG_NAME){
-                container('git') {
+                container('kubectl') {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]){
                     sh '''
                         echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
