@@ -67,8 +67,8 @@
                 container('git') {
                     stage('Update image'){
                         withCredentials([
-                        file(credentialsId: 'kube-client-cert', variable: 'kube-client-cert'),
-                        file(credentialsId: 'kube-client-key', variable: 'kube-client-key'),
+                        file(credentialsId: 'kube-client-cert', variable: 'KUBE_CLIENT_CERT'),
+                        file(credentialsId: 'kube-client-key', variable: 'KUBE_CLIENT_KEY'),
                         ]){
                         // must be set in env vars for multibranch pipeline
                         println("KUBE_SERVER = " + env.KUBE_SERVER)
@@ -78,8 +78,8 @@
                             echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
                             #sed -i "/\\        image:/c \\        image: 'xillah/nginx:${GIT_TAG_NAME}'" ${WORKSPACE}/kuber_manifests/deployment.yml
                             #cat ${WORKSPACE}/kuber_manifests/deployment.yml
-                            cp \$kube-client-cert ${WORKSPACE}/kube-client-cert.pem
-                            cp \$kube-client-key ${WORKSPACE}/kube-key-cert.pem
+                            cp $KUBE_CLIENT_CERT ${WORKSPACE}/kube-client-cert.pem
+                            cp $KUBE_CLIENT_KEY ${WORKSPACE}/kube-key-cert.pem
                             curl --cert ${WORKSPACE}/kube-client-cert.pem --key ${WORKSPACE}/kube-key-cert.pem -k $KUBE_SERVER/apis/apps/v1/namespaces/nginx/deployments/nginx-deployment -X PATCH -H 'Content-Type: application/strategic-merge-patch+json' -d '{"spec": {"template": {"spec": {"containers": [{"name": "nginx","image": "xillah/nginx:$GIT_TAG_NAME"}]}}}}'
                         '''
                         }
