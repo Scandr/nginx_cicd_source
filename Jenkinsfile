@@ -80,7 +80,7 @@
                             #cat ${WORKSPACE}/kuber_manifests/deployment.yml
                             cp $KUBE_CLIENT_CERT ${WORKSPACE}/kube-client-cert.pem
                             cp $KUBE_CLIENT_KEY ${WORKSPACE}/kube-key-cert.pem
-                            curl --cert ${WORKSPACE}/kube-client-cert.pem --key ${WORKSPACE}/kube-key-cert.pem -k $KUBE_SERVER/apis/apps/v1/namespaces/nginx/deployments/nginx-deployment -X PATCH -H 'Content-Type: application/strategic-merge-patch+json' -d '{"spec": {"template": {"spec": {"containers": [{"name": "nginx","image": "xillah/nginx:\$GIT_TAG_NAME"}]}}}}'
+                            curl --cert ${WORKSPACE}/kube-client-cert.pem --key ${WORKSPACE}/kube-key-cert.pem -k $KUBE_SERVER/apis/apps/v1/namespaces/nginx/deployments/nginx-deployment -X PATCH -H 'Content-Type: application/strategic-merge-patch+json' -d '{"spec": {"template": {"spec": {"containers": [{"name": "nginx","image": "xillah/nginx:\\$GIT_TAG_NAME"}]}}}}'
                         '''
                         }
                     }
