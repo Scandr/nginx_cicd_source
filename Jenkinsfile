@@ -28,7 +28,7 @@
                     //     credentialsId: 'git_creds'
                     checkout scmGit(branches: [[name: "${env.BUILD_VERSION}"]],
                         userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]])
-                    env.GIT_TAG_NAME = gitTagName()
+                    env.GIT_TAG_NAME = sh(script: 'git describe --exact-match --tags HEAD', returnStdout: true).trim()
                 }
             }
             container('kaniko') {
