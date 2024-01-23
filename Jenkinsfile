@@ -22,7 +22,7 @@
             container('git') {
                 stage('Git checkout') {
                     env.BUILD_VERSION = scm.getBranches()[0].toString()
-                    sh 'env'
+
                     sh '''
                     git config --global --add safe.directory $WORKSPACE
                     '''
@@ -33,6 +33,7 @@
                     checkout scmGit(branches: [[name: "${env.BUILD_VERSION}"]],
                         userRemoteConfigs: [[ url: 'https://github.com/Scandr/nginx_cicd_source.git' ]])
                     env.GIT_TAG_NAME = sh(script: '''git describe --tags | awk -F"-" '/-/{print $1}' ''', returnStdout: true).trim()
+                    sh 'env'
                 }
             }
             container('kaniko') {
