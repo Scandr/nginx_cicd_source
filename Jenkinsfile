@@ -83,7 +83,7 @@
                             export NEW_IMAGE="xillah/nginx:$GIT_TAG_NAME"
                             export CURL_REQ="{\\"spec\\": {\\"template\\": {\\"spec\\": {\\"containers\\": [{\\"name\\": \\"nginx\\",\\"image\\": \\"$NEW_IMAGE\\"}]}}}}"
                             #curl --cert ${WORKSPACE}/kube-client-cert.pem --key ${WORKSPACE}/kube-key-cert.pem -k $KUBE_SERVER/apis/apps/v1/namespaces/nginx/deployments/nginx-deployment -X PATCH -H 'Content-Type: application/strategic-merge-patch+json' -d '{"spec": {"template": {"spec": {"containers": [{"name": "nginx","image": $NEW_IMAGE}]}}}}'
-                            curl --cert ${WORKSPACE}/kube-client-cert.pem --key ${WORKSPACE}/kube-key-cert.pem -k $KUBE_SERVER/apis/apps/v1/namespaces/nginx/deployments/nginx-deployment -X PATCH -H 'Content-Type: application/strategic-merge-patch+json' -d \\'$CURL_REQ\\'
+                            curl --cert ${WORKSPACE}/kube-client-cert.pem --key ${WORKSPACE}/kube-key-cert.pem -k $KUBE_SERVER/apis/apps/v1/namespaces/nginx/deployments/nginx-deployment -X PATCH -H 'Content-Type: application/strategic-merge-patch+json' -d "$CURL_REQ"
                         '''
                         }
                     }
