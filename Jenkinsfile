@@ -2,8 +2,8 @@
         containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:v1.19.2-debug', ttyEnabled: true, command: 'sleep', args: '99d'),
         // containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:latest-jdk17', command: 'sleep', args: '99d', ttyEnabled: true)
         // containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent', args: '${computer.jnlpmac} ${computer.name}')
-        containerTemplate(name: 'git', image: 'bitnami/git', command: 'sleep', args: '99d'),
-        containerTemplate(name: 'kubectl', image: 'bitnami/kubectl:1.28.6', command: 'sleep', args: '99d')
+        containerTemplate(name: 'git', image: 'bitnami/git', command: 'sleep', args: '99d')
+//         containerTemplate(name: 'kubectl', image: 'bitnami/kubectl:1.28.6', command: 'sleep', args: '99d')
     ]){
         properties([
             pipelineTriggers([
@@ -64,9 +64,10 @@
                 }
             }
             if (env.GIT_TAG_NAME){
-                container('kubectl') {
+                container('git') {
                     stage('Update image'){
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]){
+                        input message: "input request"
                         sh '''
                             echo "GIT_TAG_NAME = ${GIT_TAG_NAME}"
                             sed -i "/\\        image:/c \\        image: 'xillah/nginx:${GIT_TAG_NAME}'" ${WORKSPACE}/kuber_manifests/deployment.yml
