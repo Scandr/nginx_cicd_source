@@ -18,7 +18,7 @@ spec:
       containers:
       - name: nginx
         #image: nginx:latest
-        image: xillah/nginx:latest
+        image: xillah/nginx:main
         imagePullPolicy: Always
         ports:
         - containerPort: 80
